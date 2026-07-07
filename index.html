@@ -7,6 +7,7 @@
 
 <title>产品原型中心</title>
 
+
 <style>
 
 body{
@@ -20,17 +21,23 @@ body{
 
 .container{
 
-    width:900px;
-
-    margin:60px auto;
+    width:800px;
+    margin:80px auto;
 
 }
 
 
-h1{
+.header{
 
     text-align:center;
+    margin-bottom:40px;
 
+}
+
+
+.header h1{
+
+    font-size:32px;
     color:#222;
 
 }
@@ -39,47 +46,56 @@ h1{
 .card{
 
     background:white;
-
-    padding:25px;
-
-    margin:20px 0;
+    padding:30px;
 
     border-radius:12px;
 
-    box-shadow:0 5px 20px rgba(0,0,0,.08);
+    box-shadow:
+    0 5px 20px rgba(0,0,0,.08);
 
 }
 
 
-button{
+.card h2{
+
+    margin-top:0;
+
+    color:#333;
+
+}
+
+
+.card p{
+
+    color:#666;
+
+    line-height:28px;
+
+}
+
+
+.btn{
+
+    display:inline-block;
+
+    margin-top:20px;
+
+    padding:12px 30px;
 
     background:#1677ff;
 
     color:white;
 
-    border:0;
-
-    padding:12px 25px;
+    text-decoration:none;
 
     border-radius:6px;
-
-    cursor:pointer;
-
-}
-
-
-a{
-
-    text-decoration:none;
 
 }
 
 
 </style>
 
-
 </head>
-
 
 
 <body>
@@ -88,77 +104,33 @@ a{
 <div class="container">
 
 
+<div class="header">
+
 <h1>
 产品原型中心
 </h1>
 
+</div>
+
+
 
 <div class="card">
+
 
 <h2>
 VIP会员体系
 </h2>
 
+
 <p>
-VIP等级、经验值、晋升规则等产品原型
+包含VIP等级配置、经验值规则、
+晋升规则及会员权益等相关产品原型。
 </p>
 
 
-<a href="./vip.html">
+<a class="btn" href="./VIP.html">
 
-<button>
 查看原型
-</button>
-
-</a>
-
-
-</div>
-
-
-
-<div class="card">
-
-<h2>
-活动系统
-</h2>
-
-
-<p>
-签到、排行榜、活动配置等原型
-</p>
-
-
-<a href="#">
-
-<button>
-查看原型
-</button>
-
-</a>
-
-
-</div>
-
-
-
-<div class="card">
-
-<h2>
-管理后台
-</h2>
-
-
-<p>
-运营管理后台相关页面
-</p>
-
-
-<a href="#">
-
-<button>
-查看原型
-</button>
 
 </a>
 
@@ -170,5 +142,6 @@ VIP等级、经验值、晋升规则等产品原型
 
 
 </body>
+
 
 </html>
