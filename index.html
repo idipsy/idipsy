@@ -137,6 +137,7 @@
   .change-note li{ margin-bottom:3px; }
   .change-note code{ background:#f2f0e6; padding:1px 5px; border-radius:4px; font-size:12px; }
   .tag-new{ background:#e6f0ff; color:#2f5eea; font-size:10px; padding:1px 6px; border-radius:4px; margin-left:6px; font-weight:600; vertical-align:2px; }
+  .optional-tag{ background:#f2f0e6; color:#8a7a4a; font-size:10px; padding:1px 6px; border-radius:4px; margin-left:6px; font-weight:600; vertical-align:2px; }
 
   .confirm-overlay{ position:fixed; inset:0; background:rgba(20,22,34,0.35); display:none; align-items:center; justify-content:center; z-index:60; }
   .confirm-overlay.show{ display:flex; }
@@ -223,7 +224,7 @@
           <h4>四、客户端展示设置：新增功能，设计为"全局统一配置"</h4>
           <ul>
             <li>具体实现：工具栏新增独立的<b>「客户端展示设置」</b>入口（不放进单个等级的新增/编辑抽屉），勾选结果对所有VIP等级统一生效</li>
-            <li>同一入口内合并了规则说明文案编辑（VIP等级晋升规则说明 / 保级流水晋升规则说明 / 周流水晋升规则说明），同样全局生效；三段文案均为非必填项，若后台未填写，客户端对应模块不展示</li>
+            <li>同一入口内合并了规则说明文案编辑（VIP等级晋升规则说明 / 保级流水晋升规则说明 / 周流水晋升规则说明），同样全局生效；<b>三段文案均为非必填项，若后台未填写，客户端对应模块不展示</b></li>
             <li>点击工具栏「客户端展示设置」按钮可查看该弹窗的完整效果</li>
           </ul>
 
@@ -428,20 +429,23 @@
 
     <div class="section-divider">
       <div class="section-title">规则说明文案</div>
-      <div class="section-sub">展示在客户端「我的特权」页底部，对所有等级统一生效</div>
+      <div class="section-sub">展示在客户端「我的特权」页底部，对所有等级统一生效；<b>三段文案均为非必填项，若留空，客户端对应模块不展示该内容</b></div>
     </div>
 
     <div class="field">
-      <label>VIP等级晋升规则说明</label>
-      <textarea id="copy_promotion" rows="4"></textarea>
+      <label>VIP等级晋升规则说明<span class="optional-tag">非必填</span></label>
+      <textarea id="copy_promotion" rows="4" oninput="updateEmptyHint('promotion')"></textarea>
+      <div class="hint" id="hint_promotion"></div>
     </div>
     <div class="field">
-      <label>保级流水晋升规则说明</label>
-      <textarea id="copy_keep" rows="6"></textarea>
+      <label>保级流水晋升规则说明<span class="optional-tag">非必填</span></label>
+      <textarea id="copy_keep" rows="6" oninput="updateEmptyHint('keep')"></textarea>
+      <div class="hint" id="hint_keep"></div>
     </div>
     <div class="field">
-      <label>周流水晋升规则说明</label>
-      <textarea id="copy_week" rows="6"></textarea>
+      <label>周流水晋升规则说明<span class="optional-tag">非必填</span></label>
+      <textarea id="copy_week" rows="6" oninput="updateEmptyHint('week')"></textarea>
+      <div class="hint" id="hint_week"></div>
     </div>
 
     <div class="drawer-footer">
@@ -656,6 +660,12 @@ function doDelete(){
   showToast('删除成功');
 }
 
+function updateEmptyHint(key){
+  const el = document.getElementById('copy_' + key);
+  const hint = document.getElementById('hint_' + key);
+  hint.textContent = el.value.trim() === '' ? '当前为空，保存后客户端将不展示该模块' : '';
+}
+
 function openCopyModal(){
   Object.keys(displayFields).forEach(k => {
     document.getElementById('g_' + k).checked = displayFields[k];
@@ -663,6 +673,7 @@ function openCopyModal(){
   document.getElementById('copy_promotion').value = ruleTexts.promotion;
   document.getElementById('copy_keep').value = ruleTexts.keep;
   document.getElementById('copy_week').value = ruleTexts.week;
+  ['promotion','keep','week'].forEach(updateEmptyHint);
   document.getElementById('copyModalOverlay').classList.add('show');
 }
 function closeCopyModal(){
