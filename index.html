@@ -1,147 +1,264 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-
 <meta charset="UTF-8">
-
-<title>产品原型中心</title>
-
-
+<title>脚本统计管理 - 产品原型</title>
 <style>
-
-body{
+  :root{
+    --sidebar-bg:#1b2434;
+    --sidebar-bg-hover:#242f42;
+    --sidebar-active:#2f6bff;
+    --topbar-bg:#1b2434;
+    --accent:#2f6bff;
+    --accent-dark:#1f56e0;
+    --danger:#f5333f;
+    --text-dark:#1f2937;
+    --text-gray:#6b7280;
+    --border:#e8eaef;
+    --bg-content:#eef1f6;
+  }
+  *{box-sizing:border-box;}
+  body{
     margin:0;
-    background:#f5f7fa;
-    font-family:
-    "Microsoft YaHei",
-    Arial;
-}
+    font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif;
+    background:var(--bg-content);
+    color:var(--text-dark);
+    font-size:14px;
+  }
+  .app{display:flex;min-height:100vh;}
 
+  /* Sidebar */
+  .sidebar{
+    width:220px;
+    background:var(--sidebar-bg);
+    color:#c4cbda;
+    flex-shrink:0;
+    padding-bottom:40px;
+  }
+  .logo{
+    display:flex;align-items:center;gap:8px;
+    padding:18px 20px;
+    font-weight:700;color:#fff;font-size:16px;
+    border-bottom:1px solid #2a3448;
+  }
+  .logo .logo-badge{
+    width:26px;height:26px;border-radius:6px;
+    background:linear-gradient(135deg,#ffb020,#ff7a1a);
+    display:flex;align-items:center;justify-content:center;font-size:14px;
+  }
+  .nav-group{padding:6px 0;}
+  .nav-item{
+    display:flex;align-items:center;gap:10px;
+    padding:11px 20px;cursor:pointer;font-size:13.5px;color:#aeb6c8;
+    transition:background .15s;
+  }
+  .nav-item:hover{background:var(--sidebar-bg-hover);color:#fff;}
+  .nav-item .chev{margin-left:auto;font-size:11px;opacity:.6;}
+  .subnav{background:#171f2d;}
+  .subnav .nav-item{padding-left:44px;font-size:13px;}
+  .subnav .nav-item.active{
+    background:var(--sidebar-active);
+    color:#fff;
+    position:relative;
+  }
+  .subnav .nav-item.new-badge::after{
+    content:"NEW";
+    background:#ff7a1a;color:#fff;font-size:9px;font-weight:700;
+    padding:1px 5px;border-radius:8px;margin-left:8px;
+  }
 
-.container{
+  /* Top bar */
+  .main{flex:1;display:flex;flex-direction:column;min-width:0;}
+  .topbar{
+    background:var(--topbar-bg);
+    color:#cdd3e0;
+    display:flex;align-items:center;
+    padding:0 20px;height:48px;
+    font-size:13px;
+  }
+  .breadcrumb{color:#9aa3b5;}
+  .breadcrumb b{color:#fff;font-weight:500;}
+  .topbar-icons{margin-left:auto;display:flex;align-items:center;gap:18px;color:#9aa3b5;}
+  .badge-count{
+    background:#f5333f;color:#fff;border-radius:10px;
+    font-size:11px;padding:2px 7px;font-weight:600;
+  }
+  .avatar{
+    width:26px;height:26px;border-radius:6px;
+    background:linear-gradient(135deg,#5b8def,#7c5bef);
+  }
 
-    width:800px;
-    margin:80px auto;
+  .tabs{
+    display:flex;align-items:center;gap:8px;
+    background:#fff;padding:8px 16px;
+    border-bottom:1px solid var(--border);
+    flex-wrap:wrap;
+  }
+  .tab{
+    padding:6px 14px;border-radius:16px;font-size:12.5px;
+    background:#f2f4f8;color:#5b6472;display:flex;align-items:center;gap:6px;
+    cursor:default;
+  }
+  .tab.active{background:var(--accent);color:#fff;}
+  .tab .x{opacity:.6;font-size:11px;}
 
-}
+  .content{padding:32px;display:flex;justify-content:flex-start;}
 
+  /* Form panel — 脚本统计管理页面唯一内容 */
+  .form-panel{
+    background:#fff;border-radius:10px;
+    padding:24px;
+    width:410px;max-width:92vw;
+    box-shadow:0 1px 2px rgba(20,30,60,.04);
+    display:flex;flex-direction:column;gap:20px;
+  }
+  .field{display:flex;flex-direction:column;gap:8px;}
+  .field label{font-size:13px;color:var(--text-dark);}
+  .field input, .field select{
+    height:38px;border:1px solid var(--border);border-radius:8px;
+    padding:0 12px;font-size:13.5px;color:var(--text-dark);
+    outline:none;background:#f5f6f9;width:100%;
+  }
+  .field input:focus, .field select:focus{border-color:var(--accent);background:#fff;}
+  .field .hint{font-size:12.5px;color:#9aa3b5;margin-top:-2px;}
 
-.header{
+  .form-actions{
+    display:flex;justify-content:flex-end;gap:10px;
+    padding-top:16px;border-top:1px solid var(--border);
+  }
 
-    text-align:center;
-    margin-bottom:40px;
-
-}
-
-
-.header h1{
-
-    font-size:32px;
-    color:#222;
-
-}
-
-
-.card{
-
-    background:white;
-    padding:30px;
-
-    border-radius:12px;
-
-    box-shadow:
-    0 5px 20px rgba(0,0,0,.08);
-
-}
-
-
-.card h2{
-
-    margin-top:0;
-
-    color:#333;
-
-}
-
-
-.card p{
-
-    color:#666;
-
-    line-height:28px;
-
-}
-
-
-.btn{
-
-    display:inline-block;
-
-    margin-top:20px;
-
-    padding:12px 30px;
-
-    background:#1677ff;
-
-    color:white;
-
-    text-decoration:none;
-
-    border-radius:6px;
-
-}
-
-
+  .btn{
+    height:34px;padding:0 16px;border-radius:6px;border:none;
+    font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+    font-weight:500;
+  }
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:var(--accent-dark);}
+  .btn-default{background:#f2f4f8;color:#5b6472;}
+  .btn-default:hover{background:#e7eaf1;}
 </style>
-
 </head>
-
-
 <body>
+<div class="app">
 
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo"><span class="logo-badge">J</span> JUAN365</div>
+    <div class="nav-group">
+      <div class="nav-item">首页</div>
+      <div class="nav-item">会员<span class="chev">▾</span></div>
+      <div class="nav-item">审核<span class="chev">▾</span></div>
+      <div class="nav-item">报表<span class="chev">▾</span></div>
+      <div class="nav-item">界面<span class="chev">▾</span></div>
+      <div class="nav-item" style="color:#fff;">系统<span class="chev">▴</span></div>
+      <div class="subnav">
+        <div class="nav-item">网站配置</div>
+        <div class="nav-item">APP下载日志</div>
+        <div class="nav-item">建议反馈</div>
+        <div class="nav-item">语言货币配置</div>
+        <div class="nav-item">签到配置</div>
+        <div class="nav-item">APP分发管理</div>
+        <div class="nav-item active new-badge">脚本统计管理</div>
+        <div class="nav-item">分公司站点管理</div>
+        <div class="nav-item">站点维护</div>
+      </div>
+      <div class="nav-item">LTV<span class="chev">▾</span></div>
+      <div class="nav-item">渠道<span class="chev">▾</span></div>
+    </div>
+  </div>
 
-<div class="container">
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="breadcrumb">仪表盘 &nbsp;/&nbsp; <b>脚本统计管理</b></div>
+      <div class="topbar-icons">
+        <span>🔍</span>
+        <span>⤢</span>
+        <span class="badge-count">20</span>
+        <span>⚙</span>
+        <div class="avatar"></div>
+      </div>
+    </div>
 
+    <div class="tabs">
+      <div class="tab">仪表盘 <span class="x">✕</span></div>
+      <div class="tab">APP分发管理 <span class="x">✕</span></div>
+      <div class="tab active">脚本统计管理 <span class="x">✕</span></div>
+    </div>
 
-<div class="header">
-
-<h1>
-产品原型中心
-</h1>
-
+    <div class="content">
+      <div class="form-panel">
+        <div class="field">
+          <label>脚本类型</label>
+          <select id="f_script_type" onchange="onScriptTypeChange()"></select>
+          <div class="hint" id="type_desc"></div>
+        </div>
+        <div class="field">
+          <label>开始时间 (start_date)</label>
+          <input type="date" id="f_start_date">
+        </div>
+        <div class="field">
+          <label>结束时间 (end_date)</label>
+          <input type="date" id="f_end_date">
+        </div>
+        <div class="field">
+          <label>用户ID (user_id)</label>
+          <input type="text" id="f_user_id" placeholder="请输入用户ID">
+        </div>
+        <div class="field">
+          <label>厂商ID (platform_id)</label>
+          <input type="text" id="f_platform_id" placeholder="请输入厂商ID">
+        </div>
+        <div class="field">
+          <label>子游戏ID (game_id)</label>
+          <input type="text" id="f_game_id" placeholder="请输入子游戏ID">
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-default" onclick="resetForm()">取消</button>
+          <button class="btn btn-primary" onclick="submitForm()">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<script>
+  // 脚本类型仅用于说明用途，选择后不影响下方字段的展示（六个字段始终固定展示同一套）
+  const SCRIPT_TYPES = [
+    { id:'sync_recharge',            name:'用户旧数据同步汇总表及充值提每日表',   desc:'同步用户旧数据到用户数据汇总表及充值提每日表' },
+    { id:'bet_daily',                name:'用户投注数据每日统计（修复脚本）',     desc:'修复脚本，执行用户投注数据每日统计' },
+    { id:'unsettled_bet',            name:'未结算投注数据每日统计（修复脚本）',   desc:'修复脚本，重新执行未结算用户投注数据每日统计' },
+    { id:'gift_amount',              name:'用户赠送金额数据每日统计（修复脚本）', desc:'修复脚本，执行用户赠送金额数据每日统计' },
+    { id:'deposit_withdraw',         name:'用户充值提现每日统计（修复脚本）',     desc:'修复脚本，执行用户充值提现每日统计' },
+    { id:'deposit_withdraw_report',  name:'充值提现报表统计（修复脚本）',         desc:'修复脚本，充值提现报表统计' },
+  ];
+  const FIELD_IDS = ['f_start_date','f_end_date','f_user_id','f_platform_id','f_game_id'];
 
+  function populateTypeSelect(){
+    const select = document.getElementById('f_script_type');
+    select.innerHTML = SCRIPT_TYPES.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+    onScriptTypeChange();
+  }
 
-<div class="card">
+  function onScriptTypeChange(){
+    const type = SCRIPT_TYPES.find(t => t.id === document.getElementById('f_script_type').value);
+    document.getElementById('type_desc').textContent = type ? type.desc : '';
+  }
 
+  function resetForm(){
+    FIELD_IDS.forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f_script_type').selectedIndex = 0;
+    onScriptTypeChange();
+  }
 
-<h2>
-VIP会员体系
-</h2>
+  function submitForm(){
+    const payload = { script_type: document.getElementById('f_script_type').value };
+    FIELD_IDS.forEach(id => payload[id.replace('f_','')] = document.getElementById(id).value.trim());
+    console.log('保存参数：', payload);
+    alert('已保存');
+  }
 
-
-<p>
-包含VIP等级配置、经验值规则、
-晋升规则及会员权益等相关产品原型。
-</p>
-
-
-<a class="btn" href="./vip.html">
-
-查看原型
-
-</a>
-
-
-</div>
-
-
-</div>
-
-
+  populateTypeSelect();
+</script>
 </body>
-
-
 </html>
