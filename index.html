@@ -102,9 +102,9 @@
   .tab.active{background:var(--accent);color:#fff;}
   .tab .x{opacity:.6;font-size:11px;}
 
-  .content{padding:32px;display:flex;justify-content:flex-start;}
+  .content{padding:32px;display:flex;flex-direction:column;align-items:flex-start;gap:20px;}
 
-  /* Form panel — 脚本统计管理页面唯一内容 */
+  /* Form panel */
   .form-panel{
     background:#fff;border-radius:10px;
     padding:24px;
@@ -136,6 +136,36 @@
   .btn-primary:hover{background:var(--accent-dark);}
   .btn-default{background:#f2f4f8;color:#5b6472;}
   .btn-default:hover{background:#e7eaf1;}
+
+  /* 规则说明面板（研发参考，非用户可见交互项） */
+  .spec-panel{
+    background:#fff;border-radius:10px;
+    padding:20px 24px;
+    width:410px;max-width:92vw;
+    box-shadow:0 1px 2px rgba(20,30,60,.04);
+  }
+  .spec-panel h4{
+    margin:0 0 12px;font-size:13.5px;color:var(--text-dark);font-weight:600;
+  }
+  .spec-panel h4:not(:first-child){margin-top:18px;}
+  .spec-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  .spec-table th, .spec-table td{
+    text-align:left;padding:7px 8px;border-bottom:1px solid var(--border);
+    color:var(--text-gray);vertical-align:top;
+  }
+  .spec-table th{color:var(--text-dark);font-weight:500;}
+  .spec-list{margin:0;padding-left:18px;font-size:12.5px;color:var(--text-gray);line-height:1.8;}
+  .spec-list code{background:#f2f4f8;color:var(--text-dark);padding:1px 5px;border-radius:4px;font-size:12px;}
+
+  /* Toast */
+  .toast{
+    position:fixed;top:28px;left:50%;transform:translateX(-50%) translateY(-20px);
+    background:#16a34a;color:#fff;padding:10px 20px;border-radius:8px;
+    font-size:13.5px;box-shadow:0 6px 20px rgba(0,0,0,.15);
+    opacity:0;pointer-events:none;transition:opacity .25s, transform .25s;
+    display:flex;align-items:center;gap:8px;z-index:200;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
@@ -214,13 +244,34 @@
           <input type="text" id="f_game_id" placeholder="请输入子游戏ID">
         </div>
         <div class="form-actions">
-          <button class="btn btn-default" onclick="resetForm()">取消</button>
+          <button class="btn btn-default" onclick="resetForm()">重置</button>
           <button class="btn btn-primary" onclick="submitForm()">保存</button>
         </div>
+      </div>
+
+      <!-- 文字规则说明（供研发核对，非终端用户交互内容） -->
+      <div class="spec-panel">
+        <h4>脚本类型 → 说明文字（一一对应，选中后展示于下拉框下方）</h4>
+        <table class="spec-table">
+          <thead><tr><th>脚本类型</th><th>说明文字</th></tr></thead>
+          <tbody id="spec-type-rows"></tbody>
+        </table>
+        <h4>字段规则</h4>
+        <ul class="spec-list">
+          <li>标签格式统一为"中文名 (英文字段名)"，共5个，固定展示、不随脚本类型变化：<code>start_date</code>、<code>end_date</code>、<code>user_id</code>、<code>platform_id</code>、<code>game_id</code></li>
+          <li>开始时间 / 结束时间为原生日期控件；用户ID / 厂商ID / 子游戏ID为文本输入框，placeholder统一为"请输入XX"</li>
+        </ul>
+        <h4>按钮规则</h4>
+        <ul class="spec-list">
+          <li><code>重置</code>：清空全部字段，脚本类型下拉恢复为第一项</li>
+          <li><code>保存</code>：收集脚本类型 + 5个字段值提交，成功后弹出"保存成功"提示</li>
+        </ul>
       </div>
     </div>
   </div>
 </div>
+
+<div class="toast" id="toast">✓ 保存成功</div>
 
 <script>
   // 脚本类型仅用于说明用途，选择后不影响下方字段的展示（六个字段始终固定展示同一套）
@@ -240,6 +291,12 @@
     onScriptTypeChange();
   }
 
+  function populateSpecTable(){
+    document.getElementById('spec-type-rows').innerHTML = SCRIPT_TYPES.map(t =>
+      `<tr><td>${t.name}</td><td>${t.desc}</td></tr>`
+    ).join('');
+  }
+
   function onScriptTypeChange(){
     const type = SCRIPT_TYPES.find(t => t.id === document.getElementById('f_script_type').value);
     document.getElementById('type_desc').textContent = type ? type.desc : '';
@@ -251,14 +308,23 @@
     onScriptTypeChange();
   }
 
+  let toastTimer = null;
+  function showToast(){
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+
   function submitForm(){
     const payload = { script_type: document.getElementById('f_script_type').value };
     FIELD_IDS.forEach(id => payload[id.replace('f_','')] = document.getElementById(id).value.trim());
     console.log('保存参数：', payload);
-    alert('已保存');
+    showToast();
   }
 
   populateTypeSelect();
+  populateSpecTable();
 </script>
 </body>
 </html>
